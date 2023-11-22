@@ -15,10 +15,10 @@
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.4',
+    'version': '0.5',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','portal','jt_stock_subcontracting','purchase_stock'],
+    'depends': ['base','stock','portal','jt_stock_subcontracting','purchase_stock','jt_dropship'],
 
     # always loaded
     'data': [
