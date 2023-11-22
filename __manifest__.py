@@ -18,7 +18,7 @@
     'version': '0.5',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','stock','portal','jt_stock_subcontracting','purchase_stock','jt_dropship'],
+    'depends': ['base','stock','portal','jt_stock_subcontracting','purchase_stock'],
 
     # always loaded
     'data': [
