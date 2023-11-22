@@ -85,7 +85,7 @@ class CustomerPortal(portal.CustomerPortal):
         if searchbar_filters:
             # default filter
             if not filterby:
-                filterby = 'all'
+                filterby = 'preparation'
             domain += searchbar_filters[filterby]['domain']
 
         # count for pager
