@@ -40,9 +40,10 @@
                 <thead>
                     <tr class="active">
                         <th>Transfer</th>
+                        <th>Partner</th>
                         <th class="text-right">Scheduled Date</th>
                         <th>Source</th>
-                        <th>Status</th>
+                        <th class="text-right">Status</th>
                     </tr>
                 </thead>
                 <t t-foreach="transfers" t-as="transfer">
@@ -51,6 +52,9 @@
                             <a t-att-href="transfer.get_portal_url()">
                                 <t t-esc="transfer.name" />
                             </a>
+                        </td>
+                        <td>
+                            <span t-field="transfer.partner_id" />
                         </td>
                         <td class="text-right">
                             <span t-field="transfer.scheduled_date"
@@ -214,7 +218,7 @@
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                     </t>
 
-                    <t t-if="transfer.move_lines[0].partner_id">
+                    <t t-if="transfer.move_lines and transfer.move_lines[0].partner_id">
                         <hr />
                         <address t-field="transfer.move_lines[0].partner_id"
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />                        
@@ -343,7 +347,7 @@
             <th><span class='d-none d-md-inline'>Vendor</span></th>
         </xpath>
         <xpath expr="//tr//td[1]" position="after">
-            <td><t t-esc="order.partner_id.name"/></td>
+            <td><span t-field="order.partner_id"/></td>
         </xpath>        
     </template>
 
