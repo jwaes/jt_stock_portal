@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="portal_my_home_menu_transfer" name="Portal layout : transfer menu entries"
+        inherit_id="portal.portal_breadcrumbs" priority="25">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'transfers' or transfer"
+                t-attf-class="breadcrumb-item #{'active ' if not transfer else ''}">
+                <a t-if="transfer" t-attf-href="/my/transfers?{{ keep_query() }}">Transfers</a>
+                <t t-else="">Transfers</t>
+            </li>
+            <li t-if="transfer" class="breadcrumb-item active">
+                <t t-esc="transfer.name" />
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_transfer" name="Show Transfers" customize_show="True"
+        inherit_id="portal.portal_my_home" priority="25">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Transfers</t>
+                <t t-set="url" t-value="'/my/transfers'" />
+                <t t-set="placeholder_count" t-value="'transfer_count'" />
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_transfers" name="My Transfers">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True" />
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Transfers</t>
+            </t>
+            <t t-if="not transfers">
+                <p>There are currently no transfers for your account.</p>
+            </t>
+            <t t-if="transfers" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Transfer</th>
+                        <th class="text-right">Scheduled Date</th>
+                        <th>Source</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <t t-foreach="transfers" t-as="transfer">
+                    <tr>
+                        <td>
+                            <a t-att-href="transfer.get_portal_url()">
+                                <t t-esc="transfer.name" />
+                            </a>
+                        </td>
+                        <td class="text-right">
+                            <span t-field="transfer.scheduled_date"
+                                t-options='{"widget": "date"}' />
+                        </td>
+                        <td>
+                            <span t-field="transfer.origin" />
+                        </td>
+                        <td class="text-right">
+                            <t t-call="jt_stock_portal.transfer_state_bubble" />
+                        </td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_transfer" name="My Transfer" inherit_id="portal.portal_sidebar"
+        primary="True">
+
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <!-- <t t-set="o_portal_fullwidth_alert" groups="stock.group_stock_manager">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url"
+                        t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (transfer._name, transfer.id,
+            transfer.env.ref('stock.picking').id)" />
+                </t>
+            </t> -->
+
+            <div class="row mt16 o_portal_transfers_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'" />
+
+                    <t t-set="title">
+                        <!-- <h2 class="mb-0">sdfgdfg </h2> -->
+                    </t>
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item flex-grow-1">
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn"
+                                            t-att-href="transfer.get_portal_url(report_type='pdf', download=True)"
+                                            title="Download"><i class="fa fa-download" /> Download</a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a
+                                            class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print"
+                                            t-att-href="transfer.get_portal_url(report_type='pdf')"
+                                            id="print_transfer_report" title="Print" target="_blank"><i
+                                                class="fa fa-print" /> Print</a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="navspy list-group-item pl-0 flex-grow-1" t-ignore="true"
+                                role="complementary">
+                                <ul class="nav flex-column bs-sidenav"></ul>
+                            </li>
+
+                            <!-- <li t-if="order.user_id" class="list-group-item flex-grow-1">
+                                    <div class="small mb-1"><strong class="text-muted">Purchase Representative</strong></div>
+                                    <div class="row flex-nowrap">
+                                        <div class="col flex-grow-0 pr-2">
+                                            <img class="rounded-circle mr4 float-left o_portal_contact_img"
+                            t-att-src="image_data_uri(order.user_id.avatar_1024)" alt="Contact"/>
+                                        </div>
+                                        <div class="col pl-0" style="min-width: 150px">
+                                            <span t-field="order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"],
+                            "no_marker": True}'/>
+                                            <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send message</a>
+                                        </div>
+                                    </div>
+                                </li> -->
+                        </ul>
+                    </t>
+                </t>
+
+                <!-- Page content -->
+                <div id="transfer_content" class="col-12 col-lg justify-content-end">
+
+                    <!-- status messages -->
+                    <div t-if="transfer.state == 'cancel'"
+                        class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">
+                            &amp;times;</button>
+                        <strong>This transfer has been canceled.</strong>
+                    </div>
+
+                    <!-- main content -->
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}"
+                        id="portal_transfer_content">
+                        <div t-call="jt_stock_portal.transfer_portal_content" />
+                    </div>
+
+                    <!-- chatter -->
+                    <div id="transfer_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="transfer" />
+                        </t>
+                    </div>
+                </div><!--
+                // #quote_content -->
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="transfer_portal_content" name="Transfer Portal Content">
+        <!-- Intro -->
+        <div id="introduction"
+            t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+            <h2 class="my-0"> Transfer <em t-esc="transfer.name" />
+            </h2>
+        </div>
+
+        <div id="content" t-attf-class="#{'card-body' if report_type == 'html' else ''}">
+            <div class="row mb-3" id="transfer_scheduled_date">
+                <div class="col-6">
+                    <strong>Sheduled Date:</strong>
+                    <span t-field="transfer.scheduled_date" t-options='{"widget": "date"}' />
+                    <br/>
+                    <strong>Done Date:</strong>
+                    <span t-field="transfer.date_done" t-options='{"widget": "date"}' />                    
+                </div>
+
+                <div class="mb-3 col-6 text-right">
+                    <t t-call="jt_stock_portal.transfer_state_bubble" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+
+                <div class="col-lg-6">
+                    <t>
+                        <strong class="d-block mb-1">Partner:</strong>
+                        <address t-field="transfer.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                    </t>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-lg-6">
+                    <strong class="d-block mb-1">Source:</strong>
+                    <span class="text-monospace" t-field="transfer.location_id" />
+                    <t t-if="transfer.source_location_partner_id">
+                        <hr />
+                        <address t-field="transfer.source_location_partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                    </t>
+                </div>
+                <div class="col-lg-6">
+                    <strong class="d-block mb-1">Destination:</strong>
+                    <span class="text-monospace" t-field="transfer.location_dest_id" />
+                    <t t-if="transfer.destination_location_partner_id">
+                        <hr />
+                        <address t-field="transfer.destination_location_partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                    </t>
+                </div>
+            </div>
+
+            <div class="row mb-3" t-if="transfer.backorder_id  or transfer.backorder_ids">
+                <div class="col">
+                    <div id="backorder_parent" class=" mb-1" t-if="transfer.backorder_id">
+                        <strong class="d-block mb-1">Backorder of:</strong>
+
+                        <a t-att-href="transfer.backorder_id.get_portal_url()">
+                            <t t-out="transfer.backorder_id.name" />
+                        </a>
+                        <t t-call="jt_stock_portal.transfer_state_bubble">
+                            <t t-set="transfer" t-value="transfer.backorder_id" />
+                        </t>
+                    </div>
+                    <div id="backorder_children" class=" mb-1" t-if="transfer.backorder_ids">
+                        <strong class="d-block mb-1">Backorders</strong>
+                        <ul>
+                            <li t-foreach="transfer.backorder_ids" t-as="bo">
+                                <a t-att-href="bo.get_portal_url()">
+                                    <t t-out="bo.name" />
+                                </a>
+                                <t t-call="jt_stock_portal.transfer_state_bubble">
+                                    <t t-set="transfer" t-value="bo" />
+                                </t>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <section id="details" class="mt-4" style="page-break-inside: auto;">
+                <div class="table-responsive">
+                    <table t-att-data-order-id="transfer.id"
+                        t-att-data-token="transfer.access_token" class="table table-sm"
+                        id="transfer_table">
+                        <thead class="bg-100">
+                            <tr>
+                                <th name="th_sm_product">
+                                    <strong>Product</strong>
+                                </th>
+                                <th name="th_sm_ordered">
+                                    <strong>Ordered</strong>
+                                </th>
+                                <th name="th_sm_quantity">
+                                    <strong>Delivered</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="lines"
+                                t-value="transfer.move_lines.filtered(lambda x: x.product_uom_qty)" />
+                            <tr t-foreach="lines" t-as="move">
+                                <td>
+                                    <span t-field="move.product_id" />
+                                    <p
+                                        t-if="move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
+                                        <span t-field="move.description_picking" />
+                                    </p>
+                                </td>
+                                <td>
+                                    <span t-field="move.product_uom_qty" />
+                                    <span t-field="move.product_uom" />
+                                </td>
+                                <td>
+                                    <span t-field="move.quantity_done" />
+                                    <span t-field="move.product_uom" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </template>
+
+
+    <template id="transfer_state_bubble" name="Transfer state bubble">
+        <span t-if="transfer.state == 'done'"
+            class="small badge badge-success orders_label_text_align">
+            <i class="fa fa-fw fa-truck" />
+            <b>Done</b>
+        </span>
+        <span t-if="transfer.state == 'cancel'"
+            class="small badge badge-danger orders_label_text_align">
+            <i class="fa fa-fw fa-times" />
+            <b>Cancelled</b>
+        </span>
+        <span
+            t-if="transfer.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+            class="small badge badge-info orders_label_text_align">
+            <i class="fa fa-fw fa-clock-o" />
+            <b>Preparation</b>
+        </span>
+    </template>
+
+
+    <template id="purchase_order_portal_content" inherit_id="purchase.purchase_order_portal_content">
+        <xpath expr="//div[@id='informations']" position="inside">
+            <div t-if="order.picking_ids" class="row">
+                <div class="col">
+                    <strong class="d-block mb-1">Transfers</strong>
+                    <ul>
+                        <li t-foreach="order.picking_ids" t-as="transfer">
+                            <a t-att-href="transfer.get_portal_url()">
+                                <t t-out="transfer.name" />
+                            </a>
+                            <t t-call="jt_stock_portal.transfer_state_bubble">
+                                <t t-set="transfer" t-value="transfer" />
+                            </t>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+    <template id="portal_my_purchase_orders" inherit_id="purchase.portal_my_purchase_orders">
+        <xpath expr="//thead//tr//th[1]" position="after">
+            <th><span class='d-none d-md-inline'>Vendor</span></th>
+        </xpath>
+        <xpath expr="//tr//td[1]" position="after">
+            <td><t t-esc="order.partner_id.name"/></td>
+        </xpath>        
+    </template>
+
+</odoo>
