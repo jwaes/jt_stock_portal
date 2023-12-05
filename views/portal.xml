@@ -282,6 +282,10 @@
                                         t-if="move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
                                         <span t-field="move.description_picking" />
                                     </p>
+                                    <t t-call="jt_product_vendorcodes.inject_vendor_code">
+                                        <t t-set="jt_vendor_id" t-value="commercial_partner" />
+                                        <t t-set="jt_product_id" t-value="move.product_id"/>
+                                    </t>                                         
                                 </td>
                                 <td>
                                     <span t-field="move.product_uom_qty" />
@@ -345,9 +349,11 @@
     <template id="portal_my_purchase_orders" inherit_id="purchase.portal_my_purchase_orders">
         <xpath expr="//thead//tr//th[1]" position="after">
             <th><span class='d-none d-md-inline'>Vendor</span></th>
+            <th><span class='d-none d-md-inline'>Vendor ref</span></th>
         </xpath>
         <xpath expr="//tr//td[1]" position="after">
             <td><span t-field="order.partner_id"/></td>
+            <td><span t-field="order.partner_ref"/></td>
         </xpath>        
     </template>
 

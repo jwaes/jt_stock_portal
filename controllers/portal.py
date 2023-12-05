@@ -61,9 +61,13 @@ class CustomerPortal(portal.CustomerPortal):
     def portal_my_transfers(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):        
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        StockPicking = request.env['stock.picking']   
+        StockPicking = request.env['stock.picking']
 
         domain = self._prepare_stockpicking_domain(partner)
+
+        variant_filter = kw.get('variant_filter')
+        if variant_filter:
+            domain += [('move_ids.product_id.ids','=',variant_filter)]
 
         searchbar_sortings = self._get_stockpicking_searchbar_sortings()
 
@@ -125,7 +129,6 @@ class CustomerPortal(portal.CustomerPortal):
 
         # report_type = kw.get('report_type')
         if report_type in ('html', 'pdf', 'text'):
-            test = 1
             return self._show_report(model=transfer_id, report_type=report_type, report_ref='stock.action_report_delivery', download=download)
 
         # confirm_type = kw.get('confirm')
@@ -135,6 +138,9 @@ class CustomerPortal(portal.CustomerPortal):
         #     order_sudo._confirm_reception_mail()
 
         values = self._stockpicking_get_page_view_values(transfer_id, access_token, **kw)
+        values.update({
+            'commercial_partner': request.env.user.partner_id.commercial_partner_id,
+        })            
         # update_date = kw.get('update')
         # if order_sudo.company_id:
         #     values['res_company'] = order_sudo.company_id
