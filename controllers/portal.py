@@ -1,4 +1,5 @@
 import base64
+import logging
 from collections import OrderedDict
 from datetime import datetime
 
@@ -10,6 +11,8 @@ from odoo.tools.translate import _
 from odoo.addons.portal.controllers import portal
 from odoo.addons.portal.controllers.portal import pager as portal_pager, get_records_pager
 
+_logger = logging.getLogger(__name__)
+
 class CustomerPortal(portal.CustomerPortal):
 
     def _prepare_home_portal_values(self, counters):
@@ -20,12 +23,13 @@ class CustomerPortal(portal.CustomerPortal):
         StockPicking = request.env['stock.picking']
 
         if 'transfer_count'  in counters:
-            values['transfer_count'] = StockPicking.search_count(self._prepare_stockpicking_domain(partner)) \
+            values['transfer_count'] = StockPicking.sudo().search_count(self._prepare_stockpicking_domain(partner)) \
                 if StockPicking.check_access_rights('read', raise_exception=False) else 0
 
         return values
 
     def _prepare_stockpicking_domain(self, partner):
+        _logger.info("commercial partner: %s", partner.commercial_partner_id.name)
         return [
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
         ]
@@ -65,10 +69,6 @@ class CustomerPortal(portal.CustomerPortal):
 
         domain = self._prepare_stockpicking_domain(partner)
 
-        variant_filter = kw.get('variant_filter')
-        if variant_filter:
-            domain += [('move_ids.product_id.ids','=',variant_filter)]
-
         searchbar_sortings = self._get_stockpicking_searchbar_sortings()
 
         searchbar_filters =  {
@@ -86,14 +86,24 @@ class CustomerPortal(portal.CustomerPortal):
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]        
 
+
+        product_variant = kw.get('product_variant')
+
         if searchbar_filters:
             # default filter
             if not filterby:
                 filterby = 'preparation'
+            elif filterby == 'product_variant' and product_variant:
+                searchbar_filters.update({
+                    filterby: {'label': 'Product variant', 'domain': [('move_line_ids.product_id.id', '=', product_variant), 
+                        ('state', 'in', ['draft', 'waiting', 'confirmed', 'assigned'])]},
+                })
+
             domain += searchbar_filters[filterby]['domain']
 
         # count for pager
-        transfer_count = StockPicking.search_count(domain)
+        transfer_count = StockPicking.sudo().search_count(domain)
+
         # make pager
         pager = portal_pager(
             url="/my/transfers",
@@ -104,7 +114,7 @@ class CustomerPortal(portal.CustomerPortal):
         )
 
         # search the count to display, according to the pager data
-        transfers = StockPicking.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
+        transfers = StockPicking.sudo().search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
         request.session['my_transfers_history'] = transfers.ids[:100]
 
         values.update({
