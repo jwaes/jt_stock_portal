@@ -160,3 +160,25 @@ class CustomerPortal(portal.CustomerPortal):
         history = request.session.get('my_transfers_history', [])
         values.update(get_records_pager(history, transfer_id))     
         return request.render("jt_stock_portal.portal_my_transfer", values)
+
+
+
+    @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
+    def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
+        return self._render_portal(
+            "purchase.portal_my_purchase_orders",
+            page, date_begin, date_end, sortby, filterby,
+            [],
+            {
+                'all': {'label': _('All'), 'domain': [('state', 'in', ['purchase', 'done', 'cancel'])]},
+                'purchase': {'label': _('Purchase Order'), 'domain': [('state', '=', 'purchase')]},
+                'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
+                'done': {'label': _('Locked'), 'domain': [('state', '=', 'done')]},
+                'notshipped': {'label': _('Not Shipped'), 'domain': [('is_shipped', '=', False)]},
+            },
+            'notshipped',
+            "/my/purchase",
+            'my_purchases_history',
+            'purchase',
+            'orders'
+        )            
