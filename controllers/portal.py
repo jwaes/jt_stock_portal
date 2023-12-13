@@ -173,7 +173,7 @@ class CustomerPortal(portal.CustomerPortal):
                 'all': {'label': _('All'), 'domain': [('state', 'in', ['purchase', 'done', 'cancel'])]},
                 'purchase': {'label': _('Purchase Order'), 'domain': [('state', '=', 'purchase')]},
                 'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
-                'done': {'label': _('Locked'), 'domain': [('state', '=', 'done')]},
+                # 'done': {'label': _('Locked'), 'domain': [('state', '=', 'done')]},
                 'notshipped': {'label': _('Not Shipped'), 'domain': [('is_shipped', '=', False)]},
             },
             'notshipped',
