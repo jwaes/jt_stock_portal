@@ -107,7 +107,7 @@ class CustomerPortal(portal.CustomerPortal):
         # make pager
         pager = portal_pager(
             url="/my/transfers",
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'filterby': filterby},
             total=transfer_count,
             page=page,
             step=self._items_per_page
