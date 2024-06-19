@@ -41,9 +41,9 @@
                     <tr class="active">
                         <th>Transfer</th>
                         <th>Partner</th>
-                        <th class="text-right">Scheduled Date</th>
+                        <th class="text-end">Scheduled Date</th>
                         <th>Source</th>
-                        <th class="text-right">Status</th>
+                        <th class="text-end">Status</th>
                     </tr>
                 </thead>
                 <t t-foreach="transfers" t-as="transfer">
@@ -56,14 +56,14 @@
                         <td>
                             <span t-field="transfer.partner_id" />
                         </td>
-                        <td class="text-right">
+                        <td class="text-end">
                             <span t-field="transfer.scheduled_date"
                                 t-options='{"widget": "date"}' />
                         </td>
                         <td>
                             <span t-field="transfer.origin" />
                         </td>
-                        <td class="text-right">
+                        <td class="text-end">
                             <t t-call="jt_stock_portal.transfer_state_bubble" />
                         </td>
                     </tr>
@@ -183,7 +183,7 @@
                     <span t-field="transfer.date_done" t-options='{"widget": "date"}' />                    
                 </div>
 
-                <div class="mb-3 col-6 text-right">
+                <div class="mb-3 col-6 text-end">
                     <t t-call="jt_stock_portal.transfer_state_bubble" />
                 </div>
             </div>
