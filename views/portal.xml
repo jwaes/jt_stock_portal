@@ -218,9 +218,9 @@
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
                     </t>
 
-                    <t t-if="transfer.move_lines and transfer.move_lines[0].partner_id">
+                    <t t-if="transfer.move_ids and transfer.move_ids[0].partner_id">
                         <hr />
-                        <address t-field="transfer.move_lines[0].partner_id"
+                        <address t-field="transfer.move_ids[0].partner_id"
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />                        
                     </t>
                 </div>
@@ -274,7 +274,7 @@
                         </thead>
                         <tbody>
                             <t t-set="lines"
-                                t-value="transfer.move_lines.filtered(lambda x: x.product_uom_qty)" />
+                                t-value="transfer.move_ids.filtered(lambda x: x.product_uom_qty)" />
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id" />
