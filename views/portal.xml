@@ -93,44 +93,19 @@
                         <!-- <h2 class="mb-0">sdfgdfg </h2> -->
                     </t>
                     <t t-set="entries">
-                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                            <li class="list-group-item flex-grow-1">
+
+
+                        <div class="d-flex flex-column gap-4">
+                            <div class="flex-grow-1 order-md-last order-lg-first">
                                 <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                                    <div class="btn-group flex-grow-1 mr-1 mb-1">
-                                        <a class="btn btn-secondary btn-block o_download_btn"
-                                            t-att-href="transfer.get_portal_url(report_type='pdf', download=True)"
-                                            title="Download"><i class="fa fa-download" /> Download</a>
-                                    </div>
                                     <div class="btn-group flex-grow-1 mb-1">
-                                        <a
-                                            class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print"
-                                            t-att-href="transfer.get_portal_url(report_type='pdf')"
-                                            id="print_transfer_report" title="Print" target="_blank"><i
-                                                class="fa fa-print" /> Print</a>
+                                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="transfer.get_portal_url(report_type='pdf')" id="print_transfer_report" title="View Details" target="_blank"><i class="fa fa-print"/> View Details</a>
                                     </div>
                                 </div>
-                            </li>
+                            </div>
+                            
+                        </div>
 
-                            <li class="navspy list-group-item pl-0 flex-grow-1" t-ignore="true"
-                                role="complementary">
-                                <ul class="nav flex-column bs-sidenav"></ul>
-                            </li>
-
-                            <!-- <li t-if="order.user_id" class="list-group-item flex-grow-1">
-                                    <div class="small mb-1"><strong class="text-muted">Purchase Representative</strong></div>
-                                    <div class="row flex-nowrap">
-                                        <div class="col flex-grow-0 pr-2">
-                                            <img class="rounded-circle mr4 float-left o_portal_contact_img"
-                            t-att-src="image_data_uri(order.user_id.avatar_1024)" alt="Contact"/>
-                                        </div>
-                                        <div class="col pl-0" style="min-width: 150px">
-                                            <span t-field="order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"],
-                            "no_marker": True}'/>
-                                            <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send message</a>
-                                        </div>
-                                    </div>
-                                </li> -->
-                        </ul>
                     </t>
                 </t>
 
@@ -307,18 +282,18 @@
 
     <template id="transfer_state_bubble" name="Transfer state bubble">
         <span t-if="transfer.state == 'done'"
-            class="small badge badge-success orders_label_text_align">
+            class="badge rounded-pill text-bg-success orders_label_text_align">
             <i class="fa fa-fw fa-truck" />
             <b>Done</b>
         </span>
         <span t-if="transfer.state == 'cancel'"
-            class="small badge badge-danger orders_label_text_align">
+            class="badge rounded-pill text-bg-danger orders_label_text_align">
             <i class="fa fa-fw fa-times" />
             <b>Cancelled</b>
         </span>
         <span
             t-if="transfer.state in ['draft', 'waiting', 'confirmed', 'assigned']"
-            class="small badge badge-info orders_label_text_align">
+            class="badge rounded-pill text-bg-info orders_label_text_align">
             <i class="fa fa-fw fa-clock-o" />
             <b>Preparation</b>
         </span>
