@@ -35,9 +35,9 @@ class CustomerPortal(portal.CustomerPortal):
 
     def _get_stockpicking_searchbar_sortings(self):
         return {
-            'date': {'label': _('Sheduled Date'), 'transfer': 'scheduled_date  desc'},
-            # 'name': {'label': _('Reference'), 'order': 'name'},
-            'stage': {'label': _('Stage'), 'transfer': 'state'},
+            'date': {'label': self.env._('Sheduled Date'), 'transfer': 'scheduled_date  desc'},
+            # 'name': {'label': self.env._('Reference'), 'order': 'name'},
+            'stage': {'label': self.env._('Stage'), 'transfer': 'state'},
         }
 
     def _stockpicking_get_page_view_values(self, transfer, access_token, **kwargs):
@@ -71,10 +71,10 @@ class CustomerPortal(portal.CustomerPortal):
         searchbar_sortings = self._get_stockpicking_searchbar_sortings()
 
         searchbar_filters =  {
-                'all': {'label': _('All'), 'domain': [('state', 'in', ['done', 'cancel', 'draft', 'waiting', 'confirmed', 'assigned'])]},
-                'preparation': {'label': _('Preparation'), 'domain': [('state', 'in', ['draft', 'waiting', 'confirmed', 'assigned'])]},
-                'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
-                'done': {'label': _('Done'), 'domain': [('state', '=', 'done')]},
+                'all': {'label': self.env._('All'), 'domain': [('state', 'in', ['done', 'cancel', 'draft', 'waiting', 'confirmed', 'assigned'])]},
+                'preparation': {'label': self.env._('Preparation'), 'domain': [('state', 'in', ['draft', 'waiting', 'confirmed', 'assigned'])]},
+                'cancel': {'label': self.env._('Cancelled'), 'domain': [('state', '=', 'cancel')]},
+                'done': {'label': self.env._('Done'), 'domain': [('state', '=', 'done')]},
             }
 
         # default sortby order
@@ -169,11 +169,11 @@ class CustomerPortal(portal.CustomerPortal):
             page, date_begin, date_end, sortby, filterby,
             [],
             {
-                'all': {'label': _('All'), 'domain': [('state', 'in', ['purchase', 'done', 'cancel'])]},
-                'purchase': {'label': _('Purchase Order'), 'domain': [('state', '=', 'purchase')]},
-                'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
-                # 'done': {'label': _('Locked'), 'domain': [('state', '=', 'done')]},
-                'notshipped': {'label': _('Not Shipped'), 'domain': [('is_shipped', '=', False)]},
+                'all': {'label': self.env._('All'), 'domain': [('state', 'in', ['purchase', 'done', 'cancel'])]},
+                'purchase': {'label': self.env._('Purchase Order'), 'domain': [('state', '=', 'purchase')]},
+                'cancel': {'label': self.env._('Cancelled'), 'domain': [('state', '=', 'cancel')]},
+                # 'done': {'label': self.env._('Locked'), 'domain': [('state', '=', 'done')]},
+                'notshipped': {'label': self.env._('Not Shipped'), 'domain': [('is_shipped', '=', False)]},
             },
             'notshipped',
             "/my/purchase",
