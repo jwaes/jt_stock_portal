@@ -23,9 +23,8 @@ class CustomerPortal(portal.CustomerPortal):
         StockPicking = request.env['stock.picking']
 
         if 'transfer_count'  in counters:
-            values['transfer_count'] = StockPicking.sudo().search_count(self._prepare_stockpicking_domain(partner)) \
-                if StockPicking.check_access_rights('read', raise_exception=False) else 0
-
+            StockPicking.check_access('read')
+            values['transfer_count'] = StockPicking.sudo().search_count(self._prepare_stockpicking_domain(partner))
         return values
 
     def _prepare_stockpicking_domain(self, partner):
