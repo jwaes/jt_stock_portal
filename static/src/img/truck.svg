@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg 
+    version="1.1" 
+    xmlns="http://www.w3.org/2000/svg" 
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    viewBox="0 0 200 150" 
+    width="200" 
+    height="150"
+    fill="none"
+    stroke="#4A5A74"
+    stroke-width="2">
+    
+    <!-- Truck Body -->
+    <polygon fill="#FCE7E7" points="20,40 120,40 140,70 40,70"/>
+    <polygon fill="#D4E4F7" points="120,40 160,40 180,70 140,70"/>
+    <polygon fill="#FFF" points="40,40 40,10 100,10 100,40"/>
+    
+    <!-- Wheels -->
+    <circle fill="#FCE7E7" cx="50" cy="80" r="10"/>
+    <circle fill="#FCE7E7" cx="150" cy="80" r="10"/>
+    
+    <!-- Windows -->
+    <rect fill="#D4E4F7" x="45" y="15" width="50" height="20"/>
+    <line x1="70" y1="15" x2="70" y2="35" stroke="#4A5A74" stroke-width="2"/>
+    
+    <!-- Truck Front Details -->
+    <polygon fill="#D4E4F7" points="100,10 120,10 120,40 100,40"/>
+    <line x1="110" y1="10" x2="110" y2="40" stroke="#4A5A74" stroke-width="2"/>
+    
+    <!-- Light Detail -->
+    <circle fill="#FFF" cx="130" cy="50" r="3"/>
+</svg>
