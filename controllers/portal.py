@@ -169,11 +169,11 @@ class CustomerPortal(portal.CustomerPortal):
             page, date_begin, date_end, sortby, filterby,
             [],
             {
-                'all': {'label': _('All'), 'domain': [('state', 'in', ['purchase', 'done', 'cancel'])]},
+                'all': {'label': _('All'), 'domain': [('state', 'in', ['purchase', 'done'])]},
                 'purchase': {'label': _('Purchase Order'), 'domain': [('state', '=', 'purchase')]},
                 'cancel': {'label': _('Cancelled'), 'domain': [('state', '=', 'cancel')]},
                 # 'done': {'label': _('Locked'), 'domain': [('state', '=', 'done')]},
-                'notshipped': {'label': _('Not Shipped'), 'domain': [('is_shipped', '=', False)]},
+                'notshipped': {'label': _('Not Shipped'), 'domain': [('is_shipped', '=', False), ('state', '!=', 'cancel')]},
             },
             'notshipped',
             "/my/purchase",
